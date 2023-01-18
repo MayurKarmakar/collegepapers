@@ -1,0 +1,5 @@
+#greetModal{
+    z-index: 500;
+    top: 35%;
+    position: fixed;
+}

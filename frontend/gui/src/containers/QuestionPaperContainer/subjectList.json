@@ -1,0 +1,8 @@
+[
+    {"id":"btech1" ,"subname":"BTECH","subject":[
+        "maths|Mathematics-I","chem_phy|Chemistry/Physics","electrn_elect|Basics of Electronics /Basic Electrical","mech_thermo|Mechanics/Thermodynamics","prgo_c|Programming in ‘c'"
+    ]},
+    {"id":"btech2","subname":"BTECH","subject":[
+        "maths|Mathematics-II","chem_phy|Chemistry/ Physics","electrn_elect|Basics of Electronics /Basic Electrical","mech_thermo|Mechanics/Thermodynamics","data_struct_c|Data Structure Using ‘C'" 
+    ]}
+]

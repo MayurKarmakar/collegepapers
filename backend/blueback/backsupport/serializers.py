@@ -1,0 +1,83 @@
+from rest_framework import serializers
+from . import models
+from allauth.account import app_settings as allauth_settings
+from allauth.utils import email_address_exists
+from allauth.account.adapter import get_adapter
+from allauth.account.utils import setup_user_email
+from rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.registration.views import RegisterView
+import re
+
+class QuestionPaperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.QuestionPapers
+        fields = "__all__"
+
+class SyllabusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Syllabus
+        fields = "__all__"
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Note
+        fields = "__all__"
+class FeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Feedback
+        fields = '__all__'
+
+
+
+class RegisterSerializer(serializers.Serializer):
+    first_name = serializers.CharField(required=True, write_only=True)
+    last_name = serializers.CharField(required=True, write_only=True)
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    password1 = serializers.CharField(required=True, write_only=True)
+    password2 = serializers.CharField(required=True, write_only=True)
+
+
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        if allauth_settings.UNIQUE_EMAIL:
+            if email and email_address_exists(email):
+                raise serializers.ValidationError(
+                    "A user is already registered with this e-mail address.")
+        return email
+
+    def validate_password1(self, password):
+        return get_adapter().clean_password(password)
+    
+
+    def validate(self, data):
+
+        if data['password1'] != data['password2']:
+            raise serializers.ValidationError(
+                ("The two password fields didn't match."))
+        if len(data['password1']) > 12:
+            raise serializers.ValidationError(("Password cannot contain more than 12 characters."),code='maxLengthError')
+        if not re.search(r'[^A-Za-z\s0-9]', data['password1']):
+            raise serializers.ValidationError(
+                ("The password must contain at least 1 special character"),
+                code='password_no_symbol')
+        if not re.search(r'[0-9]', data['password1']):
+            raise serializers.ValidationError(('Password must contain atleast a digit.'),code = 'password_no_digit')
+        return data
+
+    def get_cleaned_data(self):
+        return {
+            'first_name': self.validated_data.get('first_name', ''),
+            'last_name': self.validated_data.get('last_name', ''),
+            'password1': self.validated_data.get('password1', ''),
+            'email': self.validated_data.get('email', ''),
+        }
+
+    def save(self, request):
+        adapter = get_adapter()
+        user = adapter.new_user(request)
+        self.cleaned_data = self.get_cleaned_data()
+        adapter.save_user(request, user, self)
+        setup_user_email(request, user, [])
+        user.save()
+        return user

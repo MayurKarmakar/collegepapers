@@ -1,0 +1,5 @@
+#ServerErrorModal{
+    z-index: 500;
+    top: 40%;
+    position: fixed;
+}

@@ -1,0 +1,7 @@
+.containerContent{
+    display: flex;
+}
+.subSelect{
+    opacity: 0.5;
+    color: black;
+}
