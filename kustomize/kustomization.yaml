@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: collegepapers
+
+secretGenerator:
+- name: regcred
+  files:
+  - secrets/.dockerconfigjson
+  type: kubernetes.io/dockerconfigjson
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml

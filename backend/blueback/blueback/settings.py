@@ -113,11 +113,11 @@ DATABASES = {
         # 'OPTIONS': {
         #     'read_default_file': '/etc/mysql/my.cnf',
         # },
-        'NAME': 'bluejack',
-        'USER': 'mayur7',
-        'PASSWORD': 'Mayur_1225',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'NAME': 'collegepapers',
+        'USER': os.environ.get("DB_USER", 'root'),
+        'PASSWORD': os.environ.get("DB_PASSWORD", "password"),
+        'HOST': os.environ.get("DB_HOST", 'localhost'),
+        'PORT': os.environ.get("DB_PORT", "3306"),
     
     }
 }
